@@ -1,0 +1,19 @@
+Enter the number of items: 4
+Enter the truck capacity: 7
+Enter weight and utility for each item:
+Item 1 - Weight: 1
+Item 1 - Utility: 1
+Item 2 - Weight: 3
+Item 2 - Utility: 4
+Item 3 - Weight: 4
+Item 3 - Utility: 5
+Item 4 - Weight: 5
+Item 4 - Utility: 7
+
+Max utility = 9
+Items chosen (index, weight, utility):
+Item 2 - Weight: 3 Utility: 4
+Item 3 - Weight: 4 Utility: 5
+
+
+=== Code Execution Successful ===
