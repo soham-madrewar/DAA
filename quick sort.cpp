@@ -9,17 +9,16 @@ struct Movie {
     long long watchtime;
 };
 
-// Compare two movies based on user's choice
+
 bool compareMovies(const Movie &a, const Movie &b, int choice) {
-    if (choice == 1) return a.rating < b.rating;          // sort by rating (small -> big)
-    if (choice == 2) return a.year < b.year;              // sort by year (old -> new)
-    return a.watchtime < b.watchtime;                     // sort by watchtime (less -> more)
+    if (choice == 1) return a.rating < b.rating;          
+    if (choice == 2) return a.year < b.year;             
+    return a.watchtime < b.watchtime;                    
 }
 
-// Lomuto partition (simple)
 int partition(vector<Movie> &arr, int low, int high, int choice) {
-    Movie pivot = arr[high];    // pivot = last element
-    int i = low - 1;            // place for swapping
+    Movie pivot = arr[high];    
+    int i = low - 1;            
 
     for (int j = low; j <= high - 1; ++j) {
         if (compareMovies(arr[j], pivot, choice)) {
@@ -31,7 +30,6 @@ int partition(vector<Movie> &arr, int low, int high, int choice) {
     return i + 1;
 }
 
-// QuickSort recursive
 void quicksort(vector<Movie> &arr, int low, int high, int choice) {
     if (low < high) {
         int p = partition(arr, low, high, choice);
@@ -66,3 +64,4 @@ int main() {
 
     return 0;
 }
+
