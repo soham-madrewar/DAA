@@ -1,0 +1,21 @@
+Enter number of movies: 4
+Enter details (Title Rating Year WatchTime) one per line:
+M1 8.2 2010 500
+M2 9.0 2018 1200
+M3 7.5 2005 300
+M4 8.2 2012 800
+
+Sort by:
+1. IMDB Rating
+2. Release Year
+3. Watch Time Popularity
+Enter choice: 1
+
+Sorted Movies:
+M3 | Rating: 7.5 | Year: 2005 | WatchTime: 300
+M4 | Rating: 8.2 | Year: 2012 | WatchTime: 800
+M1 | Rating: 8.2 | Year: 2010 | WatchTime: 500
+M2 | Rating: 9 | Year: 2018 | WatchTime: 1200
+
+
+=== Code Execution Successful ===
