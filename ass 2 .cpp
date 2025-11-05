@@ -20,18 +20,17 @@ struct Movie {
     string title;
     double imdbRating;
     int releaseYear;
-    int watchTime; // hours
+    int watchTime; 
 };
 
-// Compare helper: returns true if movies[a] should come before movies[b]
-// choice: 1 -> rating, 2 -> year, 3 -> watchTime
+
 bool comesBefore(const Movie& A, const Movie& B, int choice) {
-    if (choice == 1) return A.imdbRating < B.imdbRating;   // ascending by rating
-    if (choice == 2) return A.releaseYear < B.releaseYear; // ascending by year
-    return A.watchTime < B.watchTime;                      // ascending by watchTime
+    if (choice == 1) return A.imdbRating < B.imdbRating;   
+    if (choice == 2) return A.releaseYear < B.releaseYear; 
+    return A.watchTime < B.watchTime;                      
 }
 
-// Selection sort (simple & easy)
+
 void selectionSort(vector<Movie>& movies, int choice) {
     int n = movies.size();
     for (int i = 0; i < n - 1; ++i) {
@@ -69,7 +68,7 @@ int main() {
         cin >> m.releaseYear;
         cout << "Watch Time (in hours): ";
         cin >> m.watchTime;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear newline
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
         cout << endl;
         movies.push_back(m);
     }
@@ -85,10 +84,8 @@ int main() {
     }
     cout << endl;
 
-    // Sort using selection sort
     selectionSort(movies, choice);
 
-    // Display sorted list
     cout << left << setw(30) << "Title"
          << setw(10) << "Rating"
          << setw(8) << "Year"
@@ -106,4 +103,5 @@ int main() {
 
     return 0;
 }
+
 
