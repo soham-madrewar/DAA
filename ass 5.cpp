@@ -27,19 +27,19 @@
 #include <iostream>
 #include <vector>
 #include <limits>
-#include <numeric> // for accumulate
+#include <numerical>
 using namespace std;
 
 const double INF = 1e18;
 
 struct Edge { int to; double cost; };
 
-// Compute best cost and next node using backward DP on layered DAG
+
 void computeBestCosts(int totalNodes, const vector<vector<Edge>>& adj,
                       vector<double>& bestCost, vector<int>& nextNode) {
     bestCost.assign(totalNodes, INF);
     nextNode.assign(totalNodes, -1);
-    bestCost[totalNodes - 1] = 0.0; // assume last node is sink/goal
+    bestCost[totalNodes - 1] = 0.0; 
 
     for (int u = totalNodes - 2; u >= 0; --u) {
         for (const auto &e : adj[u]) {
@@ -51,7 +51,6 @@ void computeBestCosts(int totalNodes, const vector<vector<Edge>>& adj,
     }
 }
 
-// Print path starting from src using nextNode table
 void printPath(int src, const vector<int>& nextNode, const vector<vector<Edge>>& adj) {
     if (src < 0) return;
     int cur = src;
@@ -61,7 +60,7 @@ void printPath(int src, const vector<int>& nextNode, const vector<vector<Edge>>&
         cout << cur;
         int nx = nextNode[cur];
         if (nx != -1) {
-            // find edge cost cur->nx
+           
             for (auto &e : adj[cur]) if (e.to == nx) { total += e.cost; break; }
             cout << " -> ";
         }
@@ -85,7 +84,7 @@ int main() {
     cin >> edges;
 
     vector<vector<Edge>> adj(totalNodes);
-    cout << "Enter edges as: u v cost\n"; // assume 0-indexed nodes
+    cout << "Enter edges as: u v cost\n">>
     for (int i = 0; i < edges; ++i) {
         int u, v; double c;
         cin >> u >> v >> c;
@@ -93,7 +92,7 @@ int main() {
             adj[u].push_back({v, c});
     }
 
-    // compute best costs before updates
+   
     vector<double> bestCost;
     vector<int> nextNode;
     computeBestCosts(totalNodes, adj, bestCost, nextNode);
@@ -110,7 +109,7 @@ int main() {
     int src; cin >> src;
     if (src != -1) printPath(src, nextNode, adj);
 
-    // Live updates to edge costs
+    
     cout << "\nEnter number of live updates to edge costs (0 to finish): ";
     int updates; cin >> updates;
     while (updates-- > 0) {
@@ -122,7 +121,7 @@ int main() {
         }
     }
 
-    // recompute after updates
+    
     computeBestCosts(totalNodes, adj, bestCost, nextNode);
 
     cout << "\nAfter updates, best costs from stage-0 nodes:\n";
@@ -135,4 +134,5 @@ int main() {
 
     return 0;
 }
+
 
