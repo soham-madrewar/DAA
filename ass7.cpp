@@ -29,9 +29,8 @@ using namespace std;
 class ExamScheduler {
 private:
     int numCourses;
-    vector<vector<int>> adj;                // adjacency list (conflicts)
-    vector<int> color;                      // color/slot assigned to each course
-    vector<int> courseSize;                 // number of students per course
+    vector<vector<int>> adj;                
+    vector<int> color;                  
 
 public:
     ExamScheduler(int n) : numCourses(n) {
@@ -50,7 +49,6 @@ public:
         if (course >= 0 && course < numCourses) courseSize[course] = size;
     }
 
-    // ----------------- 1) GREEDY COLORING (simple first-fit) -----------------
     int greedyColoring() {
         color.assign(numCourses, -1);
         for (int u = 0; u < numCourses; ++u) {
@@ -65,7 +63,7 @@ public:
         return *max_element(color.begin(), color.end()) + 1;
     }
 
-    // ----------------- 2) WELSH-POWELL (order by degree) -----------------
+    
     int welshPowellColoring() {
         color.assign(numCourses, -1);
         vector<int> order(numCourses);
@@ -86,7 +84,6 @@ public:
         return numColors;
     }
 
-    // ----------------- 3) DSATUR (degree of saturation heuristic) -----------------
     int dsaturColoring() {
         color.assign(numCourses, -1);
         vector<int> degree(numCourses, 0);
@@ -94,16 +91,15 @@ public:
 
         for (int i = 0; i < numCourses; ++i) degree[i] = adj[i].size();
 
-        // pick vertex with maximum degree first
+        
         int start = max_element(degree.begin(), degree.end()) - degree.begin();
         color[start] = 0;
 
-        // update neighborColors of neighbors of start
+        
         for (int v : adj[start]) neighborColors[v].insert(0);
 
         int colored = 1;
         while (colored < numCourses) {
-            // choose uncolored vertex with highest saturation (neighborColors size), break ties by degree
             int next = -1, bestSat = -1, bestDeg = -1;
             for (int i = 0; i < numCourses; ++i) {
                 if (color[i] != -1) continue;
@@ -113,15 +109,14 @@ public:
                     bestDeg = degree[i];
                     next = i;
                 }
-            }
-            // find smallest available color for 'next'
+         
             vector<bool> used(numCourses, false);
             for (int v : adj[next]) if (color[v] != -1) used[color[v]] = true;
             int c = 0;
             while (c < numCourses && used[c]) ++c;
             color[next] = c;
 
-            // update neighborColors for neighbors of 'next'
+           
             for (int v : adj[next]) if (color[v] == -1) neighborColors[v].insert(c);
 
             colored++;
@@ -129,8 +124,6 @@ public:
         return *max_element(color.begin(), color.end()) + 1;
     }
 
-    // ----------------- ROOM ALLOCATION -----------------
-    // numRooms parameter kept to match your signature (but we pack rooms by capacity)
     void allocateRooms(int numRooms, int roomCapacity) {
         int numColors = *max_element(color.begin(), color.end()) + 1;
         vector<vector<int>> slotCourses(numColors);
@@ -158,7 +151,6 @@ public:
         }
     }
 
-    // helper to print colors (for debugging / display)
     void printAssignments() {
         cout << "\nCourse -> Slot assignments:\n";
         for (int i = 0; i < numCourses; ++i) {
@@ -168,7 +160,6 @@ public:
     }
 };
 
-// ----------------- DRIVER -----------------
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -176,7 +167,7 @@ int main() {
     int n = 6;
     ExamScheduler scheduler(n);
 
-    // conflicts (same as your example)
+
     scheduler.addEdge(0, 1);
     scheduler.addEdge(0, 2);
     scheduler.addEdge(1, 2);
@@ -184,7 +175,7 @@ int main() {
     scheduler.addEdge(3, 4);
     scheduler.addEdge(4, 5);
 
-    // course sizes
+
     scheduler.setCourseSize(0, 80);
     scheduler.setCourseSize(1, 50);
     scheduler.setCourseSize(2, 40);
@@ -192,22 +183,21 @@ int main() {
     scheduler.setCourseSize(4, 90);
     scheduler.setCourseSize(5, 30);
 
-    // Run and print results for all three algorithms (one by one).
     int gSlots = scheduler.greedyColoring();
     cout << "Greedy Coloring: " << gSlots << " slots\n";
-    scheduler.printAssignments(); // shows assignment after greedy
+    scheduler.printAssignments(); 
 
     int wpSlots = scheduler.welshPowellColoring();
     cout << "\nWelsh–Powell Coloring: " << wpSlots << " slots\n";
-    scheduler.printAssignments(); // shows assignment after welsh-powell
+    scheduler.printAssignments(); 
 
     int dSlots = scheduler.dsaturColoring();
     cout << "\nDSATUR Coloring: " << dSlots << " slots\n";
-    scheduler.printAssignments(); // shows assignment after dsatur
+    scheduler.printAssignments(); 
 
-    // Finally allocate rooms (example: 3 rooms available, capacity 100 each)
     scheduler.allocateRooms(3, 100);
 
     return 0;
 }
+
 
