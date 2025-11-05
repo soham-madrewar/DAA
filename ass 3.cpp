@@ -27,15 +27,14 @@
 #include <iomanip>
 using namespace std;
 
-// Structure for each item
+
 struct Item {
     double weight;
     double utility;
     bool divisible;
-    double ratio; // utility/weight
+    double ratio; 
 };
 
-// Sort items by ratio (high to low)
 bool cmp(const Item& a, const Item& b) {
     return a.ratio > b.ratio;
 }
@@ -52,7 +51,7 @@ int main() {
 
     vector<Item> items(n);
 
-    // Input item details
+    
     for (int i = 0; i < n; ++i) {
         cout << "Item " << i + 1 << ":\n";
         cout << "Weight (kg): ";
@@ -64,8 +63,6 @@ int main() {
         items[i].ratio = items[i].utility / items[i].weight;
         cout << endl;
     }
-
-    // Sort items by best utility-to-weight ratio
     sort(items.begin(), items.end(), cmp);
 
     cout << fixed << setprecision(2);
@@ -85,20 +82,20 @@ int main() {
     double totalUtility = 0.0;
     double currentWeight = 0.0;
 
-    // Pick items greedily
+  
     for (auto& it : items) {
         if (currentWeight + it.weight <= capacity) {
-            // Take whole item
+           
             currentWeight += it.weight;
             totalUtility += it.utility;
         } else if (it.divisible) {
-            // Take fraction if allowed
+           
             double remaining = capacity - currentWeight;
             totalUtility += it.utility * (remaining / it.weight);
             currentWeight += remaining;
-            break; // boat full
+            break; 
         } else {
-            break; // cannot take non-divisible partially
+            break; 
         }
     }
 
@@ -109,4 +106,5 @@ int main() {
 
     return 0;
 }
+
 
