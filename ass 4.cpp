@@ -28,21 +28,21 @@
 #include <climits>
 using namespace std;
 
-// Graph: adjacency list as (neighbor, weight)
-using PII = pair<int,int>; // {distance, node} ya {neighbor, weight}
+
+using PII = pair<int,int>; 
 
 vector<int> dijkstra(int V, const vector<vector<PII>>& adj, int src) {
     const int INF = INT_MAX;
     vector<int> dist(V, INF);
     dist[src] = 0;
 
-    // min-heap: {currentDistance, node}
+    
     priority_queue<PII, vector<PII>, greater<PII>> pq;
     pq.push({0, src});
 
     while (!pq.empty()) {
         auto [d, u] = pq.top(); pq.pop();
-        if (d != dist[u]) continue; // stale entry skip
+        if (d != dist[u]) continue; 
 
         for (auto [v, w] : adj[u]) {
             if (dist[u] != INF && dist[u] + w < dist[v]) {
@@ -61,7 +61,7 @@ int main() {
     cout << "Enter total number of roads: ";
     cin >> E;
 
-    vector<vector<PII>> adj(V); // 0..V-1 nodes
+    vector<vector<PII>> adj(V); 
 
     cout << "Enter roads as: u v w (0-indexed, undirected)\n";
     for (int i = 0; i < E; ++i) {
@@ -83,10 +83,10 @@ int main() {
     cout << "Enter hospital nodes: ";
     for (int i = 0; i < H; ++i) cin >> hospitals[i];
 
-    // Run Dijkstra once from source
+   
     vector<int> dist = dijkstra(V, adj, source);
 
-    // Find nearest hospital
+   
     int bestHospital = -1, bestTime = INT_MAX;
     for (int h : hospitals) {
         if (h >= 0 && h < V && dist[h] < bestTime) {
@@ -104,4 +104,5 @@ int main() {
 
     return 0;
 }
+
 
