@@ -1,0 +1,18 @@
+Enter number of cities: 4
+Enter distance matrix (0 for same city):
+0 10 15 20
+10 0 35 25
+15 35 0 30
+20 25 30 0
+Enter fuel multiplier for each city (space separated):
+1.0 1.2 0.9 1.1
+
+Computed cost matrix (INF shown as -):
+- 10 15 20 
+12 - 42 30 
+14 32 - 27 
+22 28 33 - 
+
+Optimal Delivery Route:
+City 1 -> City 3 -> City 4 -> City 2 -> City 1
+Minimum Delivery Cost: 82
