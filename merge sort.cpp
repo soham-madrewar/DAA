@@ -1,3 +1,9 @@
+// name: soham madrewar
+// prn: 123B1F055
+// assignment description 
+// merge sort
+
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -79,4 +85,5 @@ int main() {
 
     return 0;
 }
+
 
