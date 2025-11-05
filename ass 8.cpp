@@ -1,27 +1,52 @@
+// name: soham madrewar
+// prn: 123B1F055
+// assignment description 
+// A university is facing challenges in scheduling exam timetables due to overlapping student
+// enrollments in multiple courses. To prevent clashes, the university needs to assign exam
+// slots efficiently, ensuring that no two exams taken by the same student are scheduled at the
+// same time.
+// To solve this, the university decides to model the problem as a Graph Coloring Problem,
+// where:
+// ● Each course is represented as a vertex.
+// ● An edge exists between two vertices if a student is enrolled in both courses.
+// ● Each vertex (course) must be assigned a color (time slot) such that no two adjacent
+// vertices share the same color (no two exams with common students are scheduled in the
+// same slot).
+// As a scheduling system developer, you must:
+// 5. Model the problem as a graph and implement a graph coloring algorithm (e.g., Greedy
+// Coloring or Backtracking).
+// 6. Minimize the number of colors (exam slots) needed while ensuring conflict-free
+// scheduling.
+// 7. Handle large datasets with thousands of courses and students, optimizing performance.
+// 8. Compare the efficiency of Greedy Coloring, DSATUR, and Welsh-Powell algorithms
+// for better scheduling.
+// Extend the solution to include room allocation constraints where exams in the same slot
+// should fit within available classrooms.
+
+
 #include <bits/stdc++.h>
 using namespace std;
 
 using ll = long long;
-const ll INF = 1e12; // large value for "no edge"
+const ll INF = 1e12; 
 
-// Node for priority queue
+
 struct Node {
-    vector<vector<ll>> reduced; // reduced cost matrix
-    vector<int> path;           // visited path (sequence of vertices)
-    ll cost;                    // current lower bound cost
-    int vertex;                 // current vertex
-    int level;                  // how many vertices visited (root level = 0)
+    vector<vector<ll>> reduced; 
+    vector<int> path;           
+    ll cost;                   
+    int vertex;                
+    int level;                  
 
     Node(const vector<vector<ll>>& r, const vector<int>& p, ll c, int v, int l)
         : reduced(r), path(p), cost(c), vertex(v), level(l) {}
 };
 
-// Reduce matrix (row & column reduction). Modify matrix and return total reduction amount.
+
 ll reduceMatrix(vector<vector<ll>>& mat) {
     int n = (int)mat.size();
     ll reduction = 0;
 
-    // Row reduction
     for (int i = 0; i < n; ++i) {
         ll rowMin = INF;
         for (int j = 0; j < n; ++j)
@@ -33,7 +58,7 @@ ll reduceMatrix(vector<vector<ll>>& mat) {
         }
     }
 
-    // Column reduction
+    
     for (int j = 0; j < n; ++j) {
         ll colMin = INF;
         for (int i = 0; i < n; ++i)
@@ -48,31 +73,31 @@ ll reduceMatrix(vector<vector<ll>>& mat) {
     return reduction;
 }
 
-// Deep copy matrix
+
 vector<vector<ll>> copyMatrix(const vector<vector<ll>>& src) {
     return src;
 }
 
-// Create child node when taking edge from -> to
+
 Node createChild(const Node& parent, int from, int to, const vector<vector<ll>>& originalCost) {
     int n = (int)originalCost.size();
     vector<vector<ll>> childMat = copyMatrix(parent.reduced);
 
-    // forbid row 'from' and column 'to'
+    
     for (int k = 0; k < n; ++k) {
         childMat[from][k] = INF;
         childMat[k][to] = INF;
     }
-    // forbid returning to start prematurely
+    
     childMat[to][0] = INF;
 
-    // reduction on child matrix
+   
     ll reduction = reduceMatrix(childMat);
 
-    // Use original cost for actual edge weight from->to
+    
     ll edgeCost = originalCost[from][to];
 
-    // child cost = parent's cost + edgeCost + reduction
+    
     ll childCost = parent.cost + edgeCost + reduction;
 
     vector<int> newPath = parent.path;
@@ -81,20 +106,18 @@ Node createChild(const Node& parent, int from, int to, const vector<vector<ll>>&
     return Node(childMat, newPath, childCost, to, parent.level + 1);
 }
 
-// Branch and Bound solver
+
 void branchAndBound(const vector<vector<ll>>& cost) {
     int n = (int)cost.size();
-    // root reduced matrix = copy of original cost (diagonal should be INF already)
+   
     vector<vector<ll>> rootMat = copyMatrix(cost);
 
-    // initial reduction
+    
     ll rootReduction = reduceMatrix(rootMat);
 
-    // root node: start at city 0
     vector<int> rootPath = {0};
     Node root(rootMat, rootPath, rootReduction, 0, 0);
 
-    // min-heap by cost
     auto cmp = [](const Node& a, const Node& b) { return a.cost > b.cost; };
     priority_queue<Node, vector<Node>, decltype(cmp)> pq(cmp);
     pq.push(root);
@@ -105,10 +128,8 @@ void branchAndBound(const vector<vector<ll>>& cost) {
     while (!pq.empty()) {
         Node cur = pq.top(); pq.pop();
 
-        // prune if cost already worse than best found
         if (cur.cost >= bestCost) continue;
 
-        // if all vertices visited, close the tour by returning to start
         if (cur.level == n - 1) {
             ll totalCost = cur.cost + cost[cur.vertex][0];
             if (totalCost < bestCost) {
@@ -119,10 +140,9 @@ void branchAndBound(const vector<vector<ll>>& cost) {
             continue;
         }
 
-        // expand node: try all unvisited vertices
         for (int j = 0; j < n; ++j) {
             if (cost[cur.vertex][j] != INF) {
-                // skip if already visited
+   
                 bool visited = false;
                 for (int v : cur.path) if (v == j) { visited = true; break; }
                 if (visited) continue;
@@ -133,7 +153,7 @@ void branchAndBound(const vector<vector<ll>>& cost) {
         }
     }
 
-    // print result
+
     if (bestPath.empty()) {
         cout << "No Hamiltonian tour found.\n";
     } else {
@@ -167,7 +187,7 @@ int main() {
     cout << "Enter fuel multiplier for each city (space separated):\n";
     for (int i = 0; i < n; ++i) cin >> fuelMult[i];
 
-    // build cost matrix: cost[i][j] = round(distance[i][j] * fuelMult[i]), diagonal INF
+
     vector<vector<ll>> cost(n, vector<ll>(n, INF));
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; ++j) {
@@ -175,8 +195,6 @@ int main() {
             else cost[i][j] = (ll) llround(distance[i][j] * fuelMult[i]);
         }
 
-    // optional print of computed cost matrix
-    cout << "\nComputed cost matrix (INF shown as -):\n";
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (cost[i][j] >= INF) cout << "- ";
@@ -185,8 +203,9 @@ int main() {
         cout << '\n';
     }
 
-    // run Branch and Bound to find optimal tour
+   
     branchAndBound(cost);
 
     return 0;
 }
+
